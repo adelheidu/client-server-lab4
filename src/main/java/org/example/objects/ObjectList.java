@@ -12,7 +12,7 @@ public class ObjectList {
         objects = new ArrayList<>();
     }
 
-    public void generateFigure() {
+    public GraphicObject generateFigure() {
         Random random = new Random();
         int x, y, width, height;
         int figureType = random.nextInt(3);
@@ -22,15 +22,16 @@ public class ObjectList {
         x = random.nextInt(750 - width);
         y = random.nextInt(590 - height);
 
+        GraphicObject object;
         if (figureType == 0) {
-            objects.add(new Rectangle(x, y, width, height));
+            object = new Rectangle(x, y, width, height);
         } else if (figureType == 1) {
-            objects.add(new Oval(x, y, width, height));
+            object = new Oval(x, y, width, height);
         } else {
-            objects.add(new Triangle(
-                    x, y, x, y + height, x + width, y + height
-            ));
+            object = new Triangle(x, y, x, y + height, x + width, y + height);
         }
+        objects.add(object);
+        return object;
     }
 
     public List<GraphicObject> getObjects() {

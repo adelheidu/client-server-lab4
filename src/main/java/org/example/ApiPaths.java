@@ -13,4 +13,6 @@ public class ApiPaths {
 
     public static final String OBJECT_ID = "/api/object/{clientId}";
 
+    public static final String OBJECT_LIST_ID = "/api/objectList/{clientId}";
+
 }

@@ -1,6 +1,8 @@
 package org.example.client;
 
 import okhttp3.OkHttpClient;
+import org.example.model.ObjectListModel;
+import org.example.model.ObjectModel;
 import org.example.model.ObjectToClientsModel;
 import org.example.objects.GraphicObject;
 import org.example.objects.ObjectList;
@@ -114,14 +116,48 @@ public class Client implements ClientListener {
 
     @Override
     public void addButtonAction() {
-        objectList.generateFigure();
+        try {
+            service.addObject(clientId,
+                    new ObjectModel(
+                            serializer.serializeXMLObject(objectList.generateFigure())
+                    )
+            ).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         frame.repaintDrawingPanel();
     }
 
     @Override
     public void clearButtonAction() {
+        try {
+            service.deleteObjectList(clientId).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         objectList.clear();
         frame.repaintDrawingPanel();
     }
 
+    @Override
+    public void syncButtonAction(Integer clientId) {
+        try {
+            objectList.clear();
+            service.deleteObjectList(this.clientId).execute();
+            ObjectListModel list = service.getAllObjects(clientId).execute().body();
+            if (list.objects() != null) {
+                list.objects().forEach(obj -> {
+                    objectList.add(serializer.deserializeXMLObject(obj));
+                    try {
+                        service.addObject(this.clientId, new ObjectModel(obj)).execute();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+            frame.repaintDrawingPanel();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

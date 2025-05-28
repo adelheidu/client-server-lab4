@@ -15,4 +15,6 @@ public interface ClientListener {
 
     void sendAllButtonAction(List<Integer> clients, GraphicObject object);
 
+    void syncButtonAction(Integer clientId);
+
 }
