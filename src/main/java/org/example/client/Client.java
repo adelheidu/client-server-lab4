@@ -1,7 +1,9 @@
 package org.example.client;
 
 import okhttp3.OkHttpClient;
+import org.example.model.ObjectListModel;
 import org.example.model.ObjectToClientsModel;
+import org.example.model.RequestModel;
 import org.example.objects.GraphicObject;
 import org.example.objects.ObjectList;
 import org.example.objects.Serializer;
@@ -70,6 +72,17 @@ public class Client implements ClientListener {
                 frame.repaintDrawingPanel();
             }
 
+            List<String> list = new ArrayList<>();
+            objectList.getObjects().forEach(obj -> list.add(serializer.serializeXMLObject(obj)));
+            service.checkRequest(this.clientId, new ObjectListModel(list)).execute();
+
+            List<String> objects = service.getAllObjects(this.clientId).execute().body().objects();
+            if (objects != null) {
+                objectList.clear();
+                objects.forEach(obj -> objectList.add(serializer.deserializeXMLObject(obj)));
+                frame.repaintDrawingPanel();
+            }
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -124,4 +137,12 @@ public class Client implements ClientListener {
         frame.repaintDrawingPanel();
     }
 
+    @Override
+    public void syncButtonAction(Integer clientId) {
+        try {
+            service.sendRequest(new RequestModel(clientId, this.clientId, new ArrayList<>())).execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

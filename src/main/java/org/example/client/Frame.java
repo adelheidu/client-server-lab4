@@ -29,6 +29,7 @@ public class Frame extends JFrame {
     JButton sendAllButton;
     JButton clearButton;
     JButton closeButton;
+    JButton syncButton;
 
     GraphicObject selectedObject = null;
 
@@ -60,9 +61,11 @@ public class Frame extends JFrame {
 
         addButton = new JButton("Добавить");
         sendButton = new JButton("Отправить");
-        sendButton.setPreferredSize(new Dimension(150, 26));
+        sendButton.setPreferredSize(new Dimension(175, 26));
         sendAllButton = new JButton("Отправить всем");
-        sendAllButton.setPreferredSize(new Dimension(150, 26));
+        sendAllButton.setPreferredSize(new Dimension(175, 26));
+        syncButton = new JButton("Синхронизироваться");
+        syncButton.setPreferredSize(new Dimension(175, 26));
         clearButton = new JButton("Удалить");
         closeButton = new JButton("Закрыть");
 
@@ -74,18 +77,20 @@ public class Frame extends JFrame {
         listModel = new DefaultListModel<>();
         list.setModel(listModel);
         scrollPane = new JScrollPane(list);
-        scrollPane.setPreferredSize(new Dimension(185, 530));
+        scrollPane.setPreferredSize(new Dimension(185, 500));
 
         onAddButtonClick();
         onSendButtonClick();
         onSendAllButtonClick();
         onClearButtonClick();
         onCloseButtonClick();
+        onSyncButtonClick();
         onMouseButtonClick();
 
         serverPanel.add(scrollPane, BorderLayout.NORTH);
         serverPanel.add(sendButton, BorderLayout.SOUTH);
         serverPanel.add(sendAllButton, BorderLayout.SOUTH);
+        serverPanel.add(syncButton, BorderLayout.SOUTH);
 
 
         add(buttonPanel, BorderLayout.NORTH);
@@ -221,6 +226,18 @@ public class Frame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clientListener.closeButtonAction();
+            }
+        });
+    }
+
+    private void onSyncButtonClick() {
+        syncButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Integer client = list.getSelectedValue();
+                if (client != null) {
+                    clientListener.syncButtonAction(client);
+                }
             }
         });
     }

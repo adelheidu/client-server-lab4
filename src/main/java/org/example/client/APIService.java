@@ -1,8 +1,10 @@
 package org.example.client;
 
 import org.example.ApiPaths;
+import org.example.model.ObjectListModel;
 import org.example.model.ObjectModel;
 import org.example.model.ObjectToClientsModel;
+import org.example.model.RequestModel;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -28,5 +30,14 @@ public interface APIService {
 
     @GET(ApiPaths.OBJECT_ID)
     Call<ObjectModel> getObject(@Path("clientId") Integer id);
+
+    @POST(ApiPaths.REQUEST)
+    Call<Void> sendRequest(@Body RequestModel requestModel);
+
+    @POST(ApiPaths.REQUEST_ID)
+    Call<Void> checkRequest(@Path("clientId") Integer id, @Body ObjectListModel objectListModel);
+
+    @GET(ApiPaths.REQUEST_ID)
+    Call<ObjectListModel> getAllObjects(@Path("clientId") Integer id);
 
 }
